@@ -85,3 +85,29 @@ if st.button("Initialize RAG System"):
             
         except Exception as e:
             st.error(f"Error initializing RAG system: {str(e)}")
+
+# Battle analysis interface
+if st.session_state.get('rag_initialized', False):
+    st.subheader("Pokemon Battle Analysis")
+
+    # Creates a single-line text input field
+    question = st.text_input("Ask about Pokemon battles:", 
+                           placeholder="Who would win between Ash and Misty?") # Gray hint text that appears inside the empty input field
+    
+    if st.button("Analyze Battle") and question:
+        with st.spinner("Analyzing battle..."):
+            try:
+                # Import the main analysis function
+                from pokemon_rag_agent import initialize_system, analyze_battle
+                
+                # Initialize the agent
+                agent_executor = initialize_system() # Sets up the complete RAG pipeline (LLM, embeddings, tools, agent)
+                
+                # Analyze the battle
+                result = analyze_battle(agent_executor, question)
+                
+                st.write("**Analysis Result:**")
+                st.write(result)
+                
+            except Exception as e:
+                st.error(f"Error during analysis: {str(e)}") 
