@@ -23,7 +23,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 
 # Import the Pokemon API function
 from pokemon_api import get_pokemon_weight
@@ -80,20 +80,21 @@ def load_documents():
     return chunks
 
 def create_vector_store(chunks, embeddings):
-    """Create vector store with embeddings"""
+    """Create vector store with embeddings using FAISS instead of ChromaDB"""
     
-    vectordb = Chroma.from_documents(
+    vectordb = FAISS.from_documents(
         documents=chunks,
-        embedding=embeddings,
-        persist_directory="./chroma_db",
-        collection_name="pokemon_collection"
+        embedding=embeddings
     )
+    
+    # Save the vector store locally
+    vectordb.save_local("faiss_index")
     
     retriever = vectordb.as_retriever(
         search_type="similarity", # similarity search used for simplicity for retrieval
         search_kwargs={"k": 5}
     )
-    print("Vector store created successfully")
+    print("Vector store created successfully using FAISS")
 
     return retriever
 
