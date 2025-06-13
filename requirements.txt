@@ -3,8 +3,7 @@ google-genai
 langchain-google-genai
 langchain
 langchain-community
-langchain-chroma
-chromadb==0.4.15
+faiss-cpu
 pandas
 requests
 python-dotenv
