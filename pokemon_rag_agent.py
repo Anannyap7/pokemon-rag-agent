@@ -2,6 +2,8 @@ import os
 import re
 import csv
 import warnings
+import glob
+import pandas as pd
 from dotenv import load_dotenv
 
 # Fix protobuf compatibility issue
@@ -35,6 +37,54 @@ load_dotenv()
 
 # Valid humans for validation
 valid_humans = {"ash", "misty", "brock", "jessie", "james"}
+
+def get_latest_battle_csv():
+    """Get the most recently created battle CSV file"""
+    csv_files = glob.glob("pokemon_battle_*.csv")
+    if csv_files:
+        return max(csv_files, key=os.path.getctime)
+    return None
+
+def get_all_battle_csvs():
+    """Get all battle CSV files sorted by creation time (newest first)"""
+    csv_files = glob.glob("pokemon_battle_*.csv")
+    if csv_files:
+        csv_files.sort(key=os.path.getctime, reverse=True)
+    return csv_files
+
+def parse_csv_battle_data(csv_file):
+    """Parse battle CSV data and return structured information"""
+    try:
+        df = pd.read_csv(csv_file)
+        
+        # Extract trainer names from filename
+        filename_parts = csv_file.replace("pokemon_battle_", "").replace(".csv", "").split("_vs_")
+        
+        if len(filename_parts) == 2:
+            trainer1, trainer2 = filename_parts
+            
+            # Count wins for each trainer
+            wins1 = len(df[df['Winner'] == trainer1])
+            wins2 = len(df[df['Winner'] == trainer2])
+            ties = len(df[df['Winner'] == 'Tie'])
+            
+            return {
+                'dataframe': df,
+                'trainer1': trainer1,
+                'trainer2': trainer2,
+                'wins1': wins1,
+                'wins2': wins2,
+                'ties': ties,
+                'filename': csv_file
+            }
+    except Exception as e:
+        return {'error': str(e)}
+    
+    return None
+
+def format_csv_display_name(csv_filename):
+    """Format CSV filename for display (e.g., 'Ash vs Misty')"""
+    return csv_filename.replace("pokemon_battle_", "").replace(".csv", "").replace("_vs_", " vs ").title()
 
 def setup_llm_and_embeddings():
     """Initialize LLM and embeddings to use"""
