@@ -18,7 +18,13 @@ st.info('This app builds a RAG agent for Pokemon Battle Analysis!')
 
 with st.expander('Dataset'):
     st.write('**Raw Data**')
-    # Load the transcript
-    document = []
-    doc = TextLoader("pokemon_transcript.txt").load()
-    document.extend(doc)
+    
+    try:
+        # Load the transcript
+        with open("pokemon_transcript.txt", "r") as f:
+            transcript_content = f.read()
+        
+        st.text_area("Pokemon Transcript", transcript_content, height=200)
+        
+    except FileNotFoundError:
+        st.error("pokemon_transcript.txt file not found!")
