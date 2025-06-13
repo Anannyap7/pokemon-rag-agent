@@ -3,9 +3,7 @@ import os
 from dotenv import load_dotenv
 
 # Fix protobuf compatibility issue
-'''
-This environment variable tells the protobuf library to use the pure Python implementation instead of the C++ implementation
-'''
+# This environment variable tells the protobuf library to use the pure Python implementation instead of the C++ implementation
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
 load_dotenv()
