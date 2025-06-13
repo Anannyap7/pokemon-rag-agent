@@ -1,5 +1,5 @@
 import streamlit as st
 
-st.title('🎈 App Name')
+st.title('👾 Pokemon Battle Analyzer')
 
 st.write('Hello world!')
