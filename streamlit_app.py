@@ -32,7 +32,9 @@ with st.expander('Dataset'):
         st.error("pokemon_transcript.txt file not found!")
 
 # Only import and initialize heavy components when needed
+# Creates a clickable button. The if statement only executes when the button is pressed.
 if st.button("Initialize RAG System"):
+    # Shows a spinning loading indicator with custom text
     with st.spinner("Initializing RAG system..."):
         try:
             # Import libraries
@@ -76,9 +78,10 @@ if st.button("Initialize RAG System"):
             vectordb.save_local("faiss_index")
             
             st.success(f"RAG system initialized successfully! Created {len(chunks)} document chunks using FAISS.")
-            st.session_state.rag_initialized = True
-            st.session_state.vectordb = vectordb
-            st.session_state.llm = llm
+            # Streamlit's way to store data between app reruns. When a user interacts with the app (clicks button, types text), Streamlit reruns the entire script. Session state preserves variables across these reruns.
+            st.session_state.rag_initialized = True # boolean flag object
+            st.session_state.vectordb = vectordb # vector database object
+            st.session_state.llm = llm # language model object
             
         except Exception as e:
             st.error(f"Error initializing RAG system: {str(e)}")
