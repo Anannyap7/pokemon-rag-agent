@@ -150,7 +150,7 @@ if st.session_state.get('rag_initialized', False):
                 
                 st.write("**Analysis Result:**")
                 st.write(result)
-
+                
                 # Display CSV results if available
                 latest_csv = get_latest_battle_csv()
                 if latest_csv:
