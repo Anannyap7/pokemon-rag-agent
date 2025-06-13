@@ -1,7 +1,7 @@
 # 👾 Pokemon Battle Analyzer
 
-A RAG (Retrieval-Augmented Generation) powered Pokemon battle analysis system that determines winners based on Pokemon weights using AI agents and vector search.
-Valid Names: Ash, Misty, James, Jessie, Brock.
+A RAG (Retrieval-Augmented Generation) powered Pokemon battle analysis system that determines winners based on Pokemon weights using AI agents and vector search.\\
+**Valid Names: Ash, Misty, James, Jessie, Brock.**
 
 ## 🚀 Features
 
