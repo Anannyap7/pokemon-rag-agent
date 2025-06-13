@@ -1,11 +1,21 @@
 import streamlit as st
 import os
+import pandas as pd
 from dotenv import load_dotenv
 
 # Fix protobuf compatibility issue
 # This environment variable tells the protobuf library to use the pure Python implementation instead of the C++ implementation
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
+# Fix distutils issue for Python 3.12+
+try:
+    import distutils
+except ImportError:
+    import setuptools
+    import sys
+    sys.modules['distutils'] = setuptools
+
+# Load environment variables
 load_dotenv()
 
 st.title('👾 Pokemon Battle Analyzer')
@@ -86,7 +96,7 @@ if st.button("Initialize RAG System"):
         except Exception as e:
             st.error(f"Error initializing RAG system: {str(e)}")
 
-def display_battle_results(battle_data):
+def display_battle_results(battle_data, key_suffix=""):
     """Display battle results in a nice format"""
     if 'error' in battle_data:
         st.error(f"Error reading CSV: {battle_data['error']}")
@@ -115,19 +125,20 @@ def display_battle_results(battle_data):
     else:
         st.info("🤝 **It's a tie!** Both trainers performed equally well!")
     
-    # Provide download button for the CSV
+    # Provide download button for the CSV with unique key
     with open(battle_data['filename'], 'rb') as file:
         st.download_button(
             label="📥 Download Battle Results CSV",
             data=file.read(),
             file_name=battle_data['filename'],
             mime='text/csv',
-            help="Download the detailed battle comparison as a CSV file"
+            help="Download the detailed battle comparison as a CSV file",
+            key=f"download_csv_{key_suffix}_{battle_data['filename']}"
         )
     
     # Show file info
     st.caption(f"📁 Generated file: `{battle_data['filename']}`")
-    
+
 # Battle analysis interface
 if st.session_state.get('rag_initialized', False):
     st.subheader("Pokemon Battle Analysis")
@@ -156,7 +167,7 @@ if st.session_state.get('rag_initialized', False):
                 if latest_csv:
                     battle_data = parse_csv_battle_data(latest_csv)
                     if battle_data:
-                        display_battle_results(battle_data)
+                        display_battle_results(battle_data, key_suffix="latest")
                 
             except Exception as e:
                 st.error(f"Error during analysis: {str(e)}")
@@ -180,7 +191,7 @@ try:
         if selected_csv:
             battle_data = parse_csv_battle_data(selected_csv)
             if battle_data:
-                display_battle_results(battle_data)
+                display_battle_results(battle_data, key_suffix=f"previous_{selected_csv}")
     else:
         st.info("No previous battle results found. Run a battle analysis to generate CSV files!")
         
