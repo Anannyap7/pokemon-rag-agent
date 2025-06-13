@@ -1,7 +1,6 @@
-# 📦 Streamlit App Starter Kit 
-```
-⬆️ (Replace above with your app's name)
-```
+# 🤖 Pokemon Battle Analysis RAG Agent
+
+This is a RAG Agent which reads and processes information from a text document which contains conversations between the main characters -> Ash, Misty, Brock, James.........
 
 Description of the app ...
 
