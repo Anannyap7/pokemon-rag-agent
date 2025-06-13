@@ -1,24 +1,54 @@
-# 🤖 Pokemon Battle Analysis RAG Agent
+# 👾 Pokemon Battle Analyzer
 
-This is a RAG Agent which reads and processes information from a text document which contains conversations between the main characters -> Ash, Misty, Brock, James.........
+A RAG (Retrieval-Augmented Generation) powered Pokemon battle analysis system that determines winners based on Pokemon weights using AI agents and vector search.
+Valid Names: Ash, Misty, James, Jessie, Brock.
 
-Description of the app ...
+## 🚀 Features
 
-## Demo App
+- **RAG-Powered Analysis**: Uses FAISS vector database for semantic search through Pokemon transcripts
+- **AI Agent System**: LangChain ReAct agents with custom tools for Pokemon data extraction
+- **Weight-Based Battles**: Fetches real Pokemon weights via PokeAPI for fair comparisons
+- **Interactive Web UI**: Beautiful Streamlit interface with real-time analysis
+- **CSV Battle Reports**: Generates detailed comparison tables with downloadable results
+- **Battle History**: View and compare previous battle results
+- **Pronoun Recognition**: Smart detection of Pokemon ownership including "my" and "mine" references
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://app-starter-kit.streamlit.app/)
+## 🛠️ Tech Stack
 
-## GitHub Codespaces
+- **LangChain**: Agent framework and document processing
+- **Google Gemini**: LLM for Pokemon extraction and analysis
+- **FAISS**: Vector database for semantic search
+- **Streamlit**: Interactive web interface
+- **PokeAPI**: Real Pokemon data source
+- **Pandas**: Data manipulation and CSV handling
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/app-starter-kit?quickstart=1)
+## 📋 Prerequisites
 
-## Section Heading
+- Python 3.8+
+- Google API Key (for Gemini)
+- Internet connection (for PokeAPI)
 
-This is filler text, please replace this with text for this section.
+## ⚡ Quick Start
 
-## Further Reading
+1. **Clone and Setup**
+   ```bash
+   git clone <repository-url>
+   cd pokemon-rag-agent
+   pip install -r requirements.txt
+   ```
 
-This is filler text, please replace this with a explanatory text about further relevant resources for this repo
-- Resource 1
-- Resource 2
-- Resource 3
+2. **Configure Environment**
+   ```bash
+   # Create .env file
+   echo "GOOGLE_API_KEY=your_google_api_key_here" > .env
+   ```
+
+3. **Run the App**
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+
+4. **Use the System**
+   - Click "Initialize RAG System" to set up the vector database
+   - Ask battle questions like "Who would win between Ash and Misty?"
+   - View detailed CSV battle reports and download results
