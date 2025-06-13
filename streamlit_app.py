@@ -98,7 +98,7 @@ if st.session_state.get('rag_initialized', False):
         with st.spinner("Analyzing battle..."):
             try:
                 # Import the main analysis function (now uses FAISS instead of ChromaDB)
-                from pokemon_rag_agent import initialize_system, analyze_battle
+                from pokemon_rag_agent import initialize_system, analyze_battle, get_latest_battle_csv, parse_csv_battle_data
                 
                 # Initialize the agent
                 agent_executor = initialize_system() # Sets up the complete RAG pipeline (LLM, embeddings, tools, agent)
@@ -108,6 +108,39 @@ if st.session_state.get('rag_initialized', False):
                 
                 st.write("**Analysis Result:**")
                 st.write(result)
+
+                # Display CSV results if available
+                latest_csv = get_latest_battle_csv()
+                if latest_csv:
+                    battle_data = parse_csv_battle_data(latest_csv)
+                    if battle_data:
+                        display_battle_results(battle_data)
                 
             except Exception as e:
                 st.error(f"Error during analysis: {str(e)}")
+
+# Display existing CSV files section
+st.subheader("📁 Previous Battle Results")
+
+# Import CSV utility functions
+try:
+    from pokemon_rag_agent import get_all_battle_csvs, format_csv_display_name, parse_csv_battle_data
+    
+    csv_files = get_all_battle_csvs()
+    
+    if csv_files:
+        selected_csv = st.selectbox(
+            "Select a previous battle to view:",
+            options=csv_files,
+            format_func=format_csv_display_name
+        )
+        
+        if selected_csv:
+            battle_data = parse_csv_battle_data(selected_csv)
+            if battle_data:
+                display_battle_results(battle_data)
+    else:
+        st.info("No previous battle results found. Run a battle analysis to generate CSV files!")
+        
+except ImportError:
+    st.warning("CSV utility functions not available. Please ensure pokemon_rag_agent.py is properly configured.")
