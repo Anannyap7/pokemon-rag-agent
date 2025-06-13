@@ -35,11 +35,11 @@ with st.expander('Dataset'):
 if st.button("Initialize RAG System"):
     with st.spinner("Initializing RAG system..."):
         try:
-            # Import heavy libraries only when needed
+            # Import libraries
             from langchain_community.document_loaders import TextLoader
             from langchain.text_splitter import RecursiveCharacterTextSplitter
             from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-            from langchain_chroma import Chroma
+            from langchain_community.vectorstores import FAISS
             
             # Initialize components
             llm = ChatGoogleGenerativeAI(
@@ -66,17 +66,19 @@ if st.button("Initialize RAG System"):
             
             chunks = splitter.split_documents(document)
             
-            # Create vector store
-            vectordb = Chroma.from_documents(
+            # Create vector store using FAISS instead of ChromaDB
+            vectordb = FAISS.from_documents(
                 documents=chunks,
-                embedding=embeddings,
-                persist_directory="./chroma_db",
-                collection_name="pokemon_collection"
+                embedding=embeddings
             )
             
-            st.success(f"RAG system initialized successfully! Created {len(chunks)} document chunks.")
+            # Save the vector store
+            vectordb.save_local("faiss_index")
+            
+            st.success(f"RAG system initialized successfully! Created {len(chunks)} document chunks using FAISS.")
             st.session_state.rag_initialized = True
             st.session_state.vectordb = vectordb
+            st.session_state.llm = llm
             
         except Exception as e:
             st.error(f"Error initializing RAG system: {str(e)}")
