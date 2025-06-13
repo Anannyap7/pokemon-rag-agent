@@ -97,7 +97,7 @@ if st.session_state.get('rag_initialized', False):
     if st.button("Analyze Battle") and question:
         with st.spinner("Analyzing battle..."):
             try:
-                # Import the main analysis function
+                # Import the main analysis function (now uses FAISS instead of ChromaDB)
                 from pokemon_rag_agent import initialize_system, analyze_battle
                 
                 # Initialize the agent
@@ -110,4 +110,4 @@ if st.session_state.get('rag_initialized', False):
                 st.write(result)
                 
             except Exception as e:
-                st.error(f"Error during analysis: {str(e)}") 
+                st.error(f"Error during analysis: {str(e)}")
