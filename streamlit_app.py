@@ -17,10 +17,30 @@ st.title('👾 Pokemon Battle Analyzer')
 st.info('This app builds a RAG agent for Pokemon Battle Analysis!')
 
 with st.expander('Dataset'):
-  st.write('**Raw Data**')
-
-  # Load the transcript
-  document = []
-  doc = TextLoader("pokemon_transcript.txt").load()
-  document.extend(doc)
-  document
+    st.write('**Raw Data**')
+    
+    try:
+        # Load the transcript
+        document = []
+        doc = TextLoader("pokemon_transcript.txt").load()
+        document.extend(doc)
+        
+        # Display the document content
+        if document:
+            st.success(f"✅ Successfully loaded {len(document)} document(s)")
+            
+            # Display the content of the first document
+            st.write("**Document Content:**")
+            st.text_area("Pokemon Transcript", document[0].page_content, height=300)
+            
+            # Show document metadata
+            st.write("**Document Metadata:**")
+            st.json(document[0].metadata)
+            
+        else:
+            st.warning("⚠️ No documents loaded")
+            
+    except FileNotFoundError:
+        st.error("❌ pokemon_transcript.txt file not found. Please make sure the file exists in the current directory.")
+    except Exception as e:
+        st.error(f"❌ Error loading document: {str(e)}")
