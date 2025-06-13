@@ -2,6 +2,9 @@ import streamlit as st
 import os
 from dotenv import load_dotenv
 
+# Fix protobuf compatibility issue
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+
 load_dotenv()
 
 st.title('👾 Pokemon Battle Analyzer')
