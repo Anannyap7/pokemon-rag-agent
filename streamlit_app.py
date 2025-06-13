@@ -86,6 +86,48 @@ if st.button("Initialize RAG System"):
         except Exception as e:
             st.error(f"Error initializing RAG system: {str(e)}")
 
+def display_battle_results(battle_data):
+    """Display battle results in a nice format"""
+    if 'error' in battle_data:
+        st.error(f"Error reading CSV: {battle_data['error']}")
+        return
+    
+    st.subheader("📊 Battle Comparison Table")
+    st.dataframe(battle_data['dataframe'], use_container_width=True)
+    
+    # Create summary metrics
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(f"🏆 {battle_data['trainer1']} Wins", battle_data['wins1'])
+    
+    with col2:
+        st.metric(f"🏆 {battle_data['trainer2']} Wins", battle_data['wins2'])
+    
+    with col3:
+        st.metric("🤝 Ties", battle_data['ties'])
+    
+    # Determine overall winner
+    if battle_data['wins1'] > battle_data['wins2']:
+        st.success(f"🎉 **{battle_data['trainer1']}** is the overall winner with {battle_data['wins1']} victories!")
+    elif battle_data['wins2'] > battle_data['wins1']:
+        st.success(f"🎉 **{battle_data['trainer2']}** is the overall winner with {battle_data['wins2']} victories!")
+    else:
+        st.info("🤝 **It's a tie!** Both trainers performed equally well!")
+    
+    # Provide download button for the CSV
+    with open(battle_data['filename'], 'rb') as file:
+        st.download_button(
+            label="📥 Download Battle Results CSV",
+            data=file.read(),
+            file_name=battle_data['filename'],
+            mime='text/csv',
+            help="Download the detailed battle comparison as a CSV file"
+        )
+    
+    # Show file info
+    st.caption(f"📁 Generated file: `{battle_data['filename']}`")
+    
 # Battle analysis interface
 if st.session_state.get('rag_initialized', False):
     st.subheader("Pokemon Battle Analysis")
