@@ -10,6 +10,12 @@ load_dotenv()
 st.title('👾 Pokemon Battle Analyzer')
 st.info('This app builds a RAG agent for Pokemon Battle Analysis!')
 
+# Check if API key is available
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    st.error("Please set your GOOGLE_API_KEY in the .env file")
+    st.stop()
+
 # To initialize and display the dataset.
 with st.expander('Dataset'):
     st.write('**Raw Data**')
